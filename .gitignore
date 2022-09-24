@@ -106,3 +106,7 @@ dist
 # Whatsapp Web Session
 
 .wwebjs_auth
+
+# Google credentials
+
+google-api-credentials.json
