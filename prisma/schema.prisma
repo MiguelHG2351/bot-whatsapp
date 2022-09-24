@@ -1,0 +1,38 @@
+datasource db {
+    provider = "sqlite"
+    url      = "file:./db.sqlite"
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model registro {
+    id       Int      @id @default(autoincrement())
+    client   String
+    message  String
+    operation String
+    operationFase String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model course {
+    id       Int      @id @default(autoincrement())
+    name     String
+    abbreviation String
+    tasks    task[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model task {
+    id       Int      @id @default(autoincrement())
+    name   String
+    text  String
+    downloadFilesURL String?
+    createdAt DateTime @default(now())
+    expirationAt DateTime
+    course_id Int
+    course course @relation(fields: [course_id], references: [id])
+}
