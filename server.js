@@ -2,9 +2,14 @@ const cors = require('cors');
 const express = require('express');
 const qrcode = require('qrcode-terminal');
 
+// adapters
 const { diagloflowSession, runSample } = require('./adapter/dialogflow');
+const { deleteSteps, getLastStep } = require('./adapter/sql')
+
+// controllers
 const { generateImage } = require('./controllers/handler')
 const task = require('./controllers/task.controller')
+//routes
 const webRoutes = require('./routes/web.routes')
 
 const { clearNumber } = require('./utils')
@@ -35,19 +40,31 @@ server.listen(port, () => {
 const listening = () => (
 	client.on('message', async message => {
 		const mentions = await message.getMentions()
-		const number = clearNumber(mentions[0].id._serialized)
+		
+		// const number = clearNumber(mentions[0].id._serialized)
 		const myNumber = process.env.WHATSAPP_PHONE_NUMBER
 		
-		if(mentions.length === 0 || number !== myNumber) {
+		// que sea una mensión y que sea al número del bot
+		console.log(mentions.length > 0)
+		console.log(clearNumber(mentions[0].id._serialized) === myNumber)
+		if(!(mentions.length > 0 && clearNumber(mentions[0].id._serialized) === myNumber)) {
 			return;
-		} 
-		
-		const contact = await message.getContact()
+		}
+		if(message.body.length === 0) {
+			return;
+		}
 		if(message.from === 'status@broadcast') {
 			return;
 		}
+		console.log('K?x5')
+		const contact = await message.getContact()
 		const chat = await message.getChat();
 		const getInfo = await message.getInfo()
+		// revisar si se esta en una fase
+		const fase = getLastStep(contact.id.user)
+		
+			
+		
 
 		// console.log(mentions[0])
 		// const number = message.from.split('@')[0];
