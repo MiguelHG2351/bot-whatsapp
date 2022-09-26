@@ -56,7 +56,6 @@ async function runSample(sessionClient, sessionPath, message) {
   return result;
 }
 
-
 module.exports = {
   diagloflowSession,
   runSample,

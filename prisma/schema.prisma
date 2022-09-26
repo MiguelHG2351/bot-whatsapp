@@ -12,7 +12,7 @@ model registro {
     client   String
     message  String
     operation String
-    operationFase String
+    operationStep String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
