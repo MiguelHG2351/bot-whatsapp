@@ -1,3 +1,25 @@
+function fillData(data, fieldArr) {
+  let dataObj = {};
+  // const data = [
+  //   {
+  //     name: "xd",
+  //     lastname: "xd last",
+  //   },
+  //   {
+  //     name: "xd2",
+  //     lastname: "xd last2",
+  //   },
+  // ];
+
+  for (const [index, _data] of data.entries()) {
+    const name = Object.entries(_data);
+    dataObj[fieldArr[index]] = name[2][1];
+  }
+
+  console.log(dataObj);
+  return dataObj;
+}
+
 function clearNumber(number) {
   return number.split("@")[0];
 }
@@ -18,7 +40,7 @@ function getNextStep(operation, step) {
 const isFalsy = (value) => !value;
 const isWhitespaceString = (value) =>
   typeof value === "string" && /^\s*$/.test(value);
-  
+
 const isEmptyCollection = (value) =>
   (Array.isArray(value) || value === Object(value)) &&
   !Object.keys(value).length;
@@ -49,4 +71,5 @@ module.exports = {
   stepOperation,
   getNextStep,
   isBlank,
+  fillData,
 };

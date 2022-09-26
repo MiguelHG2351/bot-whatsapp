@@ -19,6 +19,25 @@ async function getLastStep() {
   return latest.length > 0 ? latest[0] : null;
 }
 
+async function getAllStep(client) {
+  const latest = await prisma.registro.findMany({
+    select: {
+      client: true,
+      message: true,
+      operation: true,
+      operationStep: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    where: {
+      client
+    }
+  });
+
+  return latest.length > 0 ? latest[0] : null;
+}
+
 async function createRegistro({ client, message, operation, operationStep }) {
   await prisma.registro.create({
     data: {
@@ -42,4 +61,5 @@ module.exports = {
   getLastStep,
   deleteSteps,
   createRegistro,
+  getAllStep,
 };

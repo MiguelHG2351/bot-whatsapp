@@ -67,25 +67,15 @@ const listening = () =>
     const getOperation = await getLastStep(contact.id.user);
 
     // Hay operación o acción
-    if (!isBlank(getOperation)) {
-      // const operation = stepOperation[getOperation.operation]
-      // const operationStep = operation[getOperation.operationStep]
-      // sendMessage(
-      //   message,
-      //   getOperation.operation,
-      //   getOperation.operationStep,
-      //   message.body
-      // );
+    console.log(getOperation);
+    if (!isBlank(getOperation) && getOperation === "END") {
+      const data = getAllStep(contact.id.user)
+      // console.log
+      // Aquí se hace una operación, preguntas paso a paso
+      
+      return;
     }
 
-    // console.log(mentions[0])
-    // const number = message.from.split('@')[0];
-    // const author = message.author?.split('@')[0];
-    // console.log(`\n ${contact.id.user} \n`)
-    // console.log(`\n ${mentions[0].pushname} ${mentions[0].shortName} ${mentions[0].verifiedName} \n`)
-
-    // console.log()
-    // console.log('xd')
     const res = await runSample(sessionClient, sessionPath, message.body);
     const intentType = res.intent.displayName;
 
