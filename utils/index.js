@@ -62,7 +62,7 @@ function isBlank(value) {
 }
 
 const stepOperation = {
-  CREATE: ["NAME", "TEXT", "FILE?", "EXPIRATION", "QUESTION", "END"],
+  CREATE: ["INIT", "NAME", "TEXT", "FILE?", "EXPIRATION", "END"],
   DELETE: ["CLASE", "NAME", "QUESTION", "END"],
 };
 

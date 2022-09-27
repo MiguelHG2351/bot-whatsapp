@@ -21,21 +21,14 @@ async function getLastStep() {
 
 async function getAllStep(client) {
   const latest = await prisma.registro.findMany({
-    select: {
-      client: true,
-      message: true,
-      operation: true,
-      operationStep: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
     where: {
       client
-    }
+    },
+    take: 4,
+    skip: 1,
   });
 
-  return latest.length > 0 ? latest[0] : null;
+  return latest;
 }
 
 async function createRegistro({ client, message, operation, operationStep }) {
@@ -46,6 +39,16 @@ async function createRegistro({ client, message, operation, operationStep }) {
       operation,
       operationStep,
     },
+  });
+}
+
+async function createTask(data) {
+  await prisma.task.create({
+    data: {
+      ...data,
+      course_id: 1
+    },
+
   });
 }
 
@@ -62,4 +65,5 @@ module.exports = {
   deleteSteps,
   createRegistro,
   getAllStep,
+  createTask,
 };

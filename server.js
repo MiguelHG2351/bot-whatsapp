@@ -4,7 +4,7 @@ const qrcode = require("qrcode-terminal");
 
 // adapters
 const { diagloflowSession, runSample } = require("./adapter/dialogflow");
-const { deleteSteps, getLastStep, createRegistro } = require("./adapter/sql");
+const { deleteSteps, getLastStep, createRegistro, createTask, getAllStep } = require("./adapter/sql");
 
 // controllers
 const { generateImage } = require("./controllers/handler");
@@ -12,7 +12,7 @@ const { getTasks, sendMessage } = require("./controllers/task.controller");
 //routes
 const webRoutes = require("./routes/web.routes");
 
-const { clearNumber, stepOperation, getNextStep, isBlank } = require("./utils");
+const { clearNumber, stepOperation, getNextStep, isBlank, fillData } = require("./utils");
 
 const app = express();
 const server = require("http").Server(app);
@@ -45,7 +45,7 @@ const listening = () =>
     const myNumber = process.env.WHATSAPP_PHONE_NUMBER;
 
     // que sea una mensión y que sea al número del bot
-    console.log(mentions.length > 0);
+    // console.log(mentions.length > 0);
     if (
       !(
         mentions.length > 0 &&
@@ -67,9 +67,18 @@ const listening = () =>
     const getOperation = await getLastStep(contact.id.user);
 
     // Hay operación o acción
-    console.log(getOperation);
-    if (!isBlank(getOperation) && getOperation === "END") {
-      const data = getAllStep(contact.id.user)
+    // console.log(getOperation);
+    console.log(!isBlank(getOperation))
+    console.log(getOperation)
+    // console.log(getOperation.operationStep === "END")
+    if (!isBlank(getOperation) && getOperation.operationStep === "END") {
+      const data = await getAllStep(contact.id.user)
+      const fields = ["name", "text", "downloadFilesURL", "expirationAt"]
+
+      console.log('data is ', data)
+      const setData = fillData(data, fields)
+      console.log(setData)
+      await createTask({...setData})
       // console.log
       // Aquí se hace una operación, preguntas paso a paso
       
@@ -79,22 +88,22 @@ const listening = () =>
     const res = await runSample(sessionClient, sessionPath, message.body);
     const intentType = res.intent.displayName;
 
-    console.log('respuesta: ', getOperation)
+    // console.log('respuesta: ', getOperation)
     if (intentType === "event.set.task" || getOperation !== null) {
       let action = "CREATE";
       let isEmptyObject = !isBlank(getOperation)
       let step = isEmptyObject ? getOperation.operationStep : stepOperation[action][0];
       let nextStep = isEmptyObject ? getNextStep(action, step) : step;
 
-      console.log(step)
-      console.log(nextStep)
+      // console.log(step)
+      // console.log(nextStep)
       
       if(step === 'END') {
         return await deleteSteps(contact.id.user)
       }
       await createRegistro({
         client: contact.id.user,
-        message: message.body,
+        message: message.body.replace(`@${myNumber}`, "").trim(),
         operation: action,
         operationStep: nextStep,
       });
