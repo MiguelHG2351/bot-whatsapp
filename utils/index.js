@@ -1,15 +1,5 @@
 function fillData(data, fieldArr) {
   let dataObj = {};
-  // const data = [
-  //   {
-  //     name: "xd",
-  //     lastname: "xd last",
-  //   },
-  //   {
-  //     name: "xd2",
-  //     lastname: "xd last2",
-  //   },
-  // ];
 
   for (const [index, _data] of data.entries()) {
     const name = Object.entries(_data);
